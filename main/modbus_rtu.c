@@ -15,8 +15,36 @@ Configurar parametros de la peticion
 
 
 
+void set_req(struct modbus_master*modbus,uint8_t id,uint8_t func,uint16_t address,uint16_t size,u_int16_t* datos_enviar)
+{
+  if(func ==3)
+  {
+    set_request(modbus,id,func,address,size);
+  }else
+  {
+   set_request_write(modbus,id,func,address,size,datos_enviar);
+  }
+}
 
 
+
+
+
+
+
+void set_request(struct modbus_master*  master,uint8_t id,uint8_t func,uint16_t address,uint16_t size)
+{
+    master->req.state=0;
+     master->req.id = id;                      //master tiene un miembro que es puntero a request   
+     master-> req.func = func;
+     master->port.requested_records=size;
+     set_address(&(master->req),address);
+     set_num_reg(&(master->req),size);
+
+
+
+
+}
 
 /*
   Asignar la cantidad de registros a leer
@@ -176,19 +204,6 @@ void get_responds(uint8_t size)
 
 
 
-void set_request(struct modbus_master*  master,uint8_t id,uint8_t func,uint16_t address,uint16_t size)
-{
-    master->req.state=0;
-     master->req.id = id;                      //master tiene un miembro que es puntero a request   
-     master-> req.func = func;
-     master->port.requested_records=size;
-     set_address(&(master->req),address);
-     set_num_reg(&(master->req),size);
-
-
-
-
-}
 
 
 void send_request(struct modbus_master* master, struct modbus_response* res)
@@ -235,7 +250,7 @@ struct buffer_out serialize_request(struct request* req)
       o.out[3]=req->l_address;
       o.out[4]=req->h_size;
       o.out[5]=req->l_size;
-      if(req->func ==0x10)
+      if(req->func == 0x10)
       {
         o.out[6]=req->byte_count;
 

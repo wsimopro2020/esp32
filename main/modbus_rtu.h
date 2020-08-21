@@ -80,3 +80,8 @@ void get_responds_modbus(struct modbus_response* res,struct request* req);
 
 void send_request(struct modbus_master* master, struct modbus_response* res);
 void load_registers(uint8_t* buffer,struct modbus_response*res);
+
+
+
+void set_request(struct modbus_master*  master,uint8_t id,uint8_t func,uint16_t address,uint16_t size);
+void set_req(struct modbus_master*modbus,uint8_t id,uint8_t func,uint16_t address,uint16_t size,u_int16_t* datos_enviar);
